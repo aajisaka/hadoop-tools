@@ -61,7 +61,7 @@ public class TestHashMap {
 
     long endTime = System.nanoTime();
     System.out.println("  HashSet<long>");
-    System.out.println("  Elapsed time: " + (endTime - startTime) / 1000000 + " ms");
+    System.out.println("  Elapsed time: " + (endTime - startTime) / 1000000f + " ms");
     System.out.println("  Matched " + matched + " times");
   }
 
@@ -89,7 +89,7 @@ public class TestHashMap {
 
     long endTime = System.nanoTime();
     System.out.println("  HashSet<Long>");
-    System.out.println("  Elapsed time: " + (endTime - startTime) / 1000000 + " ms");
+    System.out.println("  Elapsed time: " + (endTime - startTime) / 1000000f + " ms");
     System.out.println("  Matched " + matched + " times");
   }
 }
