@@ -1,3 +1,4 @@
+import org.apache.hadoop.io.LongWritable;
 import org.junit.Test;
 
 import java.util.HashSet;
@@ -14,19 +15,25 @@ public class TestHashMap {
     final Set<String> hashSet = new HashSet<>();
     final Random random = new Random(0xDEADBEEF);
     int matched = 0;
+    LongWritable num = new LongWritable();
 
     long startTime = System.nanoTime();
 
     for (int i = 0; i < SET_SIZE; i++) {
       // input data is String
-      String num = Long.toString(random.nextLong());
-      hashSet.add(num);
+      String input = Long.toString(random.nextLong());
+      // disable optimizer
+      if (input.length() > 5) {
+        hashSet.add(input);
+      }
     }
 
+    random.setSeed(0xDEADBEEF);
+
     for (int i = 0; i < DATA_SIZE; i++) {
-      // query data is long
-      long num = random.nextLong();
-      if (hashSet.contains(Long.toString(num))) {
+      // query data is LongWritable
+      num.set(random.nextLong());
+      if (hashSet.contains(num.toString())) {
         matched++;
       }
     }
@@ -38,51 +45,29 @@ public class TestHashMap {
   }
 
   @Test
-  public void testHashSetLongPrimitive() throws Exception {
+  public void testHashSetLong() throws Exception {
     final Set<Long> hashSet = new HashSet<>();
     final Random random = new Random(0xDEADBEEF);
     int matched = 0;
+    LongWritable num = new LongWritable();
 
     long startTime = System.nanoTime();
 
     for (int i = 0; i < SET_SIZE; i++) {
-      // input data is string
-      String num = Long.toString(random.nextLong());
-      hashSet.add(Long.parseLong(num));
-    }
-
-    for (int i = 0; i < DATA_SIZE; i++) {
-      // query data is long
-      long num = random.nextLong();
-      if (hashSet.contains(num)) {
-        matched++;
+      // input data is String
+      String input = Long.toString(random.nextLong());
+      // disable optimizer
+      if (input.length() > 5) {
+        hashSet.add(Long.parseLong(input));
       }
     }
 
-    long endTime = System.nanoTime();
-    System.out.println("  HashSet<long>");
-    System.out.println("  Elapsed time: " + (endTime - startTime) / 1000000f + " ms");
-    System.out.println("  Matched " + matched + " times");
-  }
-
-  @Test
-  public void testHashSetLongClass() throws Exception {
-    final Set<Long> hashSet = new HashSet<>();
-    final Random random = new Random(0xDEADBEEF);
-    int matched = 0;
-
-    long startTime = System.nanoTime();
-
-    for (int i = 0; i < SET_SIZE; i++) {
-      // input data is string
-      String num = Long.toString(random.nextLong());
-      hashSet.add(Long.getLong(num));
-    }
+    random.setSeed(0xDEADBEEF);
 
     for (int i = 0; i < DATA_SIZE; i++) {
-      // query data is long
-      Long num = random.nextLong();
-      if (hashSet.contains(num)) {
+      // query data is LongWritable
+      num.set(random.nextLong());
+      if (hashSet.contains(num.get())) {
         matched++;
       }
     }
