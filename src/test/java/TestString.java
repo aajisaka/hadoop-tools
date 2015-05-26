@@ -1,6 +1,11 @@
 import org.apache.hadoop.io.Text;
 import org.junit.Test;
 
+/**
+ * Benchmark for {@link String} and {@link Text}.
+ * The result shows we should avoid {@link String#substring(int, int)}
+ * as possible in loop.
+ */
 public class TestString {
 
   @Test

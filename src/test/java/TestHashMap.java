@@ -5,6 +5,10 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
+/**
+ * Benchmark for {@link HashSet} key.
+ * {@link Long} is faster than {@link String}.
+ */
 public class TestHashMap {
 
   public final int SET_SIZE = 10000000;
