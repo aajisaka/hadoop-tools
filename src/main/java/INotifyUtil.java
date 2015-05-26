@@ -1,4 +1,7 @@
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.XAttr;
+import org.apache.hadoop.fs.permission.AclEntry;
+import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.hdfs.DFSClient;
 import org.apache.hadoop.hdfs.DFSInotifyEventInputStream;
 import org.apache.hadoop.hdfs.inotify.Event;
@@ -7,6 +10,7 @@ import org.apache.hadoop.hdfs.inotify.MissingEventsException;
 import org.apache.hadoop.hdfs.server.namenode.NameNode;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Sample class for using HDFS INotify feature.
@@ -59,8 +63,9 @@ public class INotifyUtil {
           Event.CloseEvent close = (Event.CloseEvent) event;
           path = close.getPath();
           timestamp = close.getTimestamp();
+          long size = close.getFileSize();
           System.out.println("CLOSE: " + path + " closed at " +
-              timestamp + ".");
+              timestamp + ". Size: " + size + ".");
           break;
         case APPEND:
           Event.AppendEvent append = (Event.AppendEvent) event;
@@ -78,11 +83,7 @@ public class INotifyUtil {
         case METADATA:
           Event.MetadataUpdateEvent metadata =
               (Event.MetadataUpdateEvent) event;
-          Event.MetadataUpdateEvent.MetadataType metadataType =
-              metadata.getMetadataType();
-          path = metadata.getPath();
-          System.out.println("METADATA: " + metadataType + " of " + path +
-              " was updated.");
+          outputMetadata(metadata);
           break;
         case UNLINK:
           Event.UnlinkEvent unlink = (Event.UnlinkEvent) event;
@@ -92,6 +93,42 @@ public class INotifyUtil {
               timestamp + ".");
           break;
       }
+    }
+  }
+
+  private static void outputMetadata (Event.MetadataUpdateEvent metadata) {
+    Event.MetadataUpdateEvent.MetadataType metadataType =
+        metadata.getMetadataType();
+    String path = metadata.getPath();
+    System.out.print("METADATA: " + metadataType + " of " + path +
+        " was updated. ");
+    switch (metadataType) {
+      case TIMES:
+        long aTime = metadata.getAtime();
+        long mTime = metadata.getMtime();
+        System.out.println("atime: " + aTime + " mtime: " + mTime + ".");
+        break;
+      case REPLICATION:
+        int replication = metadata.getReplication();
+        System.out.println("replication: " + replication + ".");
+        break;
+      case OWNER:
+        String group = metadata.getGroupName();
+        String owner = metadata.getOwnerName();
+        System.out.println("group: " + group + "owner: " + owner + ".");
+        break;
+      case PERMS:
+        FsPermission permission = metadata.getPerms();
+        System.out.println("permission: " + permission + ".");
+        break;
+      case ACLS:
+        List<AclEntry> aclList = metadata.getAcls();
+        System.out.println("ACLs: " + aclList + ".");
+        break;
+      case XATTRS:
+        List<XAttr> xattrList = metadata.getxAttrs();
+        System.out.println("XATTRs: " + xattrList);
+        break;
     }
   }
 }
