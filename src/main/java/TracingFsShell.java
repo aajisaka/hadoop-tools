@@ -17,6 +17,7 @@
  */
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FsShell;
+import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.tracing.SpanReceiverHost;
 import org.apache.hadoop.util.ToolRunner;
 import org.apache.htrace.Sampler;
@@ -25,7 +26,6 @@ import org.apache.htrace.TraceScope;
 
 /**
  * FsShell with tracing by HTrace.
- * This class is for Hadoop 2.7, not for trunk.
  */
 public class TracingFsShell {
   public static void main(String argv[]) throws Exception {
@@ -33,7 +33,7 @@ public class TracingFsShell {
     conf.setQuietMode(false);
     FsShell shell = new FsShell();
     shell.setConf(conf);
-    SpanReceiverHost.getInstance(conf);
+    SpanReceiverHost.get(conf, DFSConfigKeys.DFS_SERVER_HTRACE_PREFIX);
     int res;
     try (TraceScope ts = Trace.startSpan("FsShell", Sampler.ALWAYS)){
       res = ToolRunner.run(shell, argv);

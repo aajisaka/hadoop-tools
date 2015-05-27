@@ -15,4 +15,4 @@ INotifyUtil
 
 * Poll events for HDFS using HDFS INotify feature and output the details.
 * Ctrl + C to stop polling.
-* Need to install Hadoop 2.7 or later.
+* Need to install Hadoop 3.0.0-SNAPSHOT.
