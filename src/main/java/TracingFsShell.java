@@ -18,6 +18,7 @@
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FsShell;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
+import org.apache.hadoop.hdfs.HdfsConfiguration;
 import org.apache.hadoop.tracing.SpanReceiverHost;
 import org.apache.hadoop.util.ToolRunner;
 import org.apache.htrace.Sampler;
@@ -29,7 +30,7 @@ import org.apache.htrace.TraceScope;
  */
 public class TracingFsShell {
   public static void main(String argv[]) throws Exception {
-    Configuration conf = new Configuration();
+    Configuration conf = new HdfsConfiguration();
     conf.setQuietMode(false);
     FsShell shell = new FsShell();
     shell.setConf(conf);
