@@ -18,10 +18,11 @@
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSClient;
 import org.apache.hadoop.hdfs.DFSInotifyEventInputStream;
+import org.apache.hadoop.hdfs.DFSUtilClient;
+import org.apache.hadoop.hdfs.HdfsConfiguration;
 import org.apache.hadoop.hdfs.inotify.Event;
 import org.apache.hadoop.hdfs.inotify.EventBatch;
 import org.apache.hadoop.hdfs.inotify.MissingEventsException;
-import org.apache.hadoop.hdfs.server.namenode.NameNode;
 
 import java.io.IOException;
 
@@ -37,8 +38,8 @@ public class INotifyUtil {
    * @throws IOException if configuration error or I/O error happens.
    */
   public static void main(String args[]) throws IOException {
-    Configuration conf = new Configuration();
-    DFSClient client = new DFSClient(NameNode.getAddress(conf), conf);
+    Configuration conf = new HdfsConfiguration();
+    DFSClient client = new DFSClient(DFSUtilClient.getNNAddress(conf), conf);
     DFSInotifyEventInputStream iStream = client.getInotifyEventStream();
     while (true) {
       try {
